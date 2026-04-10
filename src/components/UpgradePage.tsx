@@ -8,7 +8,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useAuth } from "../contexts/AuthContext";
 import { motion } from "motion/react";
 
-const stripePromise = loadStripe((import.meta as any).env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "";
+const stripePromise = stripePublishableKey ? loadStripe(stripePublishableKey) : null;
 
 export default function UpgradePage() {
   const { user } = useAuth();
@@ -18,13 +19,40 @@ export default function UpgradePage() {
   const handleSubscribe = async () => {
     console.log("Initiating subscription for user:", user?.uid);
     setLoading(true);
-    const handleSubscribe = async () => {
-      console.log("Initiating subscription for user:", user?.uid);
-      setLoading(true);
-    
-      try { // Allt detta ska ligga inuti try-måsvingen
-        const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-    
+
+    try {
+      const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+
+      if (!publishableKey) {
+        throw new Error("Stripe publishable key is missing. Please check your environment variables.");
+      }
+
+      const stripe = await loadStripe(publishableKey);
+
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user?.uid,
+        }),
+      });
+
+      const session = await response.json();
+
+      if (stripe && session.id) {
+        await stripe.redirectToCheckout({
+          sessionId: session.id,
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert(error instanceof Error ? error.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
         if (!publishableKey) {
           throw new Error("Stripe publishable key is missing. Please check your environment variables.");
         }
