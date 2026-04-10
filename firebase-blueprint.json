@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "users": {
+      "title": "User Profile",
+      "description": "Stores user preferences and health history",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "plan": { "type": "string", "enum": ["Free", "Pro", "Elite", "Ultimate"] },
+        "isPremium": { "type": "boolean" },
+        "weight": { "type": "number" },
+        "height": { "type": "number" },
+        "age": { "type": "number" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "users",
+      "description": "User profile document"
+    }
+  }
+}
