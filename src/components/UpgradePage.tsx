@@ -8,7 +8,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'motion/react';
 
-const stripePromise = loadStripe((import.meta as any).env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe((import.meta as any).env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function UpgradePage() {
   const { user } = useAuth();
@@ -19,7 +19,7 @@ export default function UpgradePage() {
     console.log('Initiating subscription for user:', user?.uid);
     setLoading(true);
     try {
-      const publishableKey = (import.meta as any).env.VITE_STRIPE_PUBLISHABLE_KEY;
+      const publishableKey = (import.meta as any).env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
       if (!publishableKey) {
         throw new Error('Stripe publishable key is missing. Please check your environment variables.');
       }
