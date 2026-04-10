@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { loadStripe } from '@stripe/stripe-js';
 import { useAuth } from '../contexts/AuthContext';
 
-const stripePromise = loadStripe((import.meta as any).env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe((import.meta as any).env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 interface PricingPlansProps {
   currentPlan: PlanTier;
