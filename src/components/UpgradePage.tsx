@@ -18,14 +18,22 @@ export default function UpgradePage() {
   const handleSubscribe = async () => {
     console.log("Initiating subscription for user:", user?.uid);
     setLoading(true);
-    try {
-      const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-      if (!publishableKey) {
-        throw new Error("Stripe publishable key is missing. Please check your environment variables.");
-      }
-
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
+    const handleSubscribe = async () => {
+      console.log("Initiating subscription for user:", user?.uid);
+      setLoading(true);
+    
+      try { // Allt detta ska ligga inuti try-måsvingen
+        const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    
+        if (!publishableKey) {
+          throw new Error("Stripe publishable key is missing. Please check your environment variables.");
+        }
+    
+        const stripePromise = await loadStripe(publishableKey); // Lägg till 'await' här också för säkerhets skull
+    
+        const response = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          // ... resten av din fetch,
         headers: {
           "Content-Type": "application/json",
         },
