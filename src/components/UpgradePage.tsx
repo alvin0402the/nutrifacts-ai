@@ -19,7 +19,7 @@ export default function UpgradePage() {
     console.log("Initiating subscription for user:", user?.uid);
     setLoading(true);
     try {
-      const publishableKey = (import.meta as any).env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+      const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
       if (!publishableKey) {
         throw new Error("Stripe publishable key is missing. Please check your environment variables.");
       }
