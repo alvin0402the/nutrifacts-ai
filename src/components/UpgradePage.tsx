@@ -29,11 +29,13 @@ export default function UpgradePage() {
 
       const session = await response.json();
       
-      if (session.id) {
-        await stripe.redirectToCheckout({ sessionId: session.id });
-      } else {
-        throw new Error("Kunde inte skapa betalsession");
-      }
+      // Istället för redirectToCheckout, använd sessionens URL direkt
+if (session.url) {
+  window.location.href = session.url;
+} else if (session.id) {
+  // Backup om du bara får ett ID
+  await stripe.redirectToCheckout({ sessionId: session.id });
+}}
     } catch (error) {
       console.error(error);
       alert("Något gick fel vid betalningen. Försök igen!");
